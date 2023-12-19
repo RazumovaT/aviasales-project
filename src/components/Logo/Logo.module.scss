@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  .logo {
+    margin-top: 5%;
+    @media (min-width: 1510px) {
+      margin-top: 10%;
+      margin-bottom: 7%;
+      margin-bottom: 5%;
+    }
+    @media (min-width: 498px) and (max-width: 1050px) {
+      margin-top: 5%;
+      margin-bottom: 2%;
+    }
+    @media (min-width: 1051px) and (max-width: 1510px) {
+      margin-top: 10%;
+      margin-bottom: 7%;
+      margin-bottom: 5%;
+    }
+    width: 60px;
+    height: 60px;
+
+    @media (min-width: 1510px) {
+      width: 80px;
+      height: 80px;
+    }
+
+  }
+}

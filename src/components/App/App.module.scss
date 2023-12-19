@@ -1,0 +1,32 @@
+.wrapper {
+  background-color: rgba(243, 247, 250, 1);
+  width: 100%;
+  min-width: 960px;
+  min-height: 1350px;
+  height: 100%;
+  @media (max-width: 570px) {
+    min-width: 497px;
+    max-width: 570px;
+  }
+  @media (min-width: 498px) and (max-width: 1050px) {
+    min-width: 498px;
+    max-width: 1050px;
+  }
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  @media (min-width: 1051px) {
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+  }
+}
+
+.mainColumn {
+  margin-top: 13%;
+  margin-left: 3%;
+}
