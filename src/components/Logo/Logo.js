@@ -1,7 +1,5 @@
 import React from "react";
-import logo from "/Users/razumova/aviasales-project/src/components/Logo/logo.svg";
-// import logo from "src/components/Logo/Logo-plane.svg";
-
+import logo from "./logo.svg";
 import styles from "./Logo.module.scss";
 
 const Logo = () => {

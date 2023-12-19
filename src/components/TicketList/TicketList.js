@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { DotLoader } from "react-spinner-overlay";
 import { Card } from "antd";
-import styles from "/Users/razumova/aviasales-project/src/components/TicketList/TicketList.module.scss";
+import styles from "./TicketList.module.scss";
 import { useDispatch } from "react-redux";
 import { format, add } from "date-fns";
 import { nanoid } from "@reduxjs/toolkit";
