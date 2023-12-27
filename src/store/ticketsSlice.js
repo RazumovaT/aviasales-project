@@ -11,28 +11,30 @@ export const fetchId = createAsyncThunk("tickets/fetchId", async function () {
   }
 });
 
-export const fetchTicketsWithId = createAsyncThunk(
-  "tickets/fetchTicketsWithId",
-  async function (searchId) {
+export const fetchTicketsData = createAsyncThunk(
+  "tickets/fetchTicketData",
+  async (searchId, { dispatch }) => {
+    const arr = [];
+
     try {
-      const data = await fetch(
+      const response = await fetch(
         `https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`
       );
-      if (data.status === 500) {
-        await fetch(
-          `https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`
-        );
+      if (response.ok) {
+        const { tickets, stop } = await response.json();
+        arr.push(...tickets);
+        if (!stop) {
+          arr.push(...dispatch(fetchTicketsData(searchId)));
+        } else if (stop) {
+          dispatch(stopFetching());
+        }
+      } else if (response.status === 500) {
+        arr.push(...dispatch(fetchTicketsData(searchId)));
       }
-      const result = await data.json();
-      return result;
-    } catch (error) {
-      if (error.code === "ERR_BAD_RESPONSE" || error.code === "ERR_ABORTED") {
-        await fetch(
-          `https://aviasales-test-api.kata.academy/tickets?searchId=${searchId}`
-        );
-      }
-      throw new Error(error);
+    } catch {
+      return arr;
     }
+    return arr;
   }
 );
 
@@ -49,6 +51,9 @@ const ticketsSlice = createSlice({
   reducers: {
     addMoreTickets(state) {
       state.slice = state.slice + 5;
+    },
+    stopFetching(state) {
+      state.status = "resolved";
     },
     filterCheapestFlight(state) {
       state.tickets = state.tickets.sort((a, b) => a.price - b.price);
@@ -78,23 +83,17 @@ const ticketsSlice = createSlice({
       state.error = null;
       state.searchId = action.payload.searchId;
     });
-    builder.addCase(fetchTicketsWithId.rejected, (state, action) => {
+    builder.addCase(fetchTicketsData.rejected, (state, action) => {
       state.status = "rejected";
       state.error = action.payload;
     });
-    builder.addCase(fetchTicketsWithId.pending, (state) => {
+    builder.addCase(fetchTicketsData.pending, (state) => {
       state.status = "loading";
       state.error = null;
     });
-    builder.addCase(fetchTicketsWithId.fulfilled, (state, action) => {
-      state.status = "resolved";
+    builder.addCase(fetchTicketsData.fulfilled, (state, action) => {
       state.error = null;
-      if (state.searchId) {
-        const { stop, tickets } = action.payload;
-        state.stop = stop;
-
-        tickets.map((ticket) => state.tickets.push(ticket));
-      }
+      state.tickets.push(...action.payload);
     });
   },
 });
@@ -110,5 +109,6 @@ export const {
   filterCheapestFlight,
   filterFastestFlight,
   filterOptimalFlight,
+  stopFetching,
 } = ticketsSlice.actions;
 export default ticketsSlice.reducer;

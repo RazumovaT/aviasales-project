@@ -2,7 +2,7 @@ import React from "react";
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./TransferBox.module.scss";
-import { checked, checkedAll } from "../store/transferSlice.js";
+import { checked, checkedAll } from "../../store/transferSlice.js";
 
 const TransferBox = () => {
   const dispatch = useDispatch();

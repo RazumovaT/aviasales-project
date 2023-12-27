@@ -3,12 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const transferSlice = createSlice({
   name: "transfers",
   initialState: {
-    transferAll: [{ id: 1, name: "Все", checked: false }],
+    transferAll: [{ id: 1, name: "Все", checked: true }],
     transfers: [
-      { id: 0, name: "Без пересадок", checked: false },
-      { id: 1, name: "1 пересадка", checked: false },
-      { id: 2, name: "2 пересадки", checked: false },
-      { id: 3, name: "3 пересадки", checked: false },
+      { id: 0, name: "Без пересадок", checked: true },
+      { id: 1, name: "1 пересадка", checked: true },
+      { id: 2, name: "2 пересадки", checked: true },
+      { id: 3, name: "3 пересадки", checked: true },
     ],
   },
   reducers: {

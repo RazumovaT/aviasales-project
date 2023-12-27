@@ -6,7 +6,7 @@ import {
   filterCheapestFlight,
   filterFastestFlight,
   filterOptimalFlight,
-} from "../store/ticketsSlice.js";
+} from "../../store/ticketsSlice";
 
 const Tabs = () => {
   const dispatch = useDispatch();
