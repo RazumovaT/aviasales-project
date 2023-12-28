@@ -45,4 +45,5 @@ const transferSlice = createSlice({
 });
 
 export const { checked, checkedAll } = transferSlice.actions;
+export const transferArray = (state) => state.transfers.transfers;
 export default transferSlice.reducer;

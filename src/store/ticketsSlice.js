@@ -47,6 +47,9 @@ const ticketsSlice = createSlice({
     tickets: [],
     stop: null,
     slice: 5,
+    cheapestFlights: false,
+    fastestFlights: false,
+    optimalFlights: true,
   },
   reducers: {
     addMoreTickets(state) {
@@ -55,26 +58,32 @@ const ticketsSlice = createSlice({
     stopFetching(state) {
       state.status = "resolved";
     },
-    filterCheapestFlight(state) {
-      state.tickets = state.tickets.sort((a, b) => a.price - b.price);
-      state.slice = 5;
-    },
-    filterFastestFlight(state) {
-      state.tickets = state.tickets.sort(
-        (a, b) =>
-          a.segments[0].duration +
-          a.segments[1].duration -
-          (b.segments[0].duration + b.segments[1].duration)
-      );
-      state.slice = 5;
-    },
-    filterOptimalFlight(state) {
-      state.tickets = state.tickets.sort(
-        (a, b) =>
-          a.price / (a.segments[0].duration + a.segments[1].duration) -
-          b.price / (b.segments[0].duration + b.segments[1].duration)
-      );
-      state.slice = 5;
+    setActiveTab(state, action) {
+      switch (action.payload) {
+        case "cheap":
+          state.cheapestFlights = true;
+          state.fastestFlights = false;
+          state.optimalFlights = false;
+          state.slice = 5;
+          break;
+        case "fast":
+          state.cheapestFlights = false;
+          state.fastestFlights = true;
+          state.optimalFlights = false;
+          state.slice = 5;
+          break;
+        case "optimal":
+          state.cheapestFlights = false;
+          state.fastestFlights = false;
+          state.optimalFlights = true;
+          state.slice = 5;
+          break;
+        default:
+          state.cheapestFlights = false;
+          state.fastestFlights = false;
+          state.optimalFlights = true;
+          state.slice = 5;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -93,6 +102,7 @@ const ticketsSlice = createSlice({
     });
     builder.addCase(fetchTicketsData.fulfilled, (state, action) => {
       state.error = null;
+
       state.tickets.push(...action.payload);
     });
   },
@@ -100,15 +110,11 @@ const ticketsSlice = createSlice({
 
 export const allTickets = (state) => state.tickets.tickets;
 export const searchId = (state) => state.tickets.searchId;
-export const fetchStop = (state) => state.tickets.stop;
 export const fetchStatus = (state) => state.tickets.status;
-export const fetchError = (state) => state.tickets.error;
 export const addSlice = (state) => state.tickets.slice;
-export const {
-  addMoreTickets,
-  filterCheapestFlight,
-  filterFastestFlight,
-  filterOptimalFlight,
-  stopFetching,
-} = ticketsSlice.actions;
+export const cheapestFlights = (state) => state.tickets.cheapestFlights;
+export const fastestFlights = (state) => state.tickets.fastestFlights;
+export const optimalFlights = (state) => state.tickets.optimalFlights;
+export const { addMoreTickets, stopFetching, setActiveTab } =
+  ticketsSlice.actions;
 export default ticketsSlice.reducer;

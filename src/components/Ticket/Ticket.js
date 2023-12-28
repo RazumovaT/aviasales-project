@@ -7,7 +7,7 @@ import {
   countTransfersStops,
   convertDateIntoFlightTime,
   countEndOfFlightTime,
-} from "../../features/features";
+} from "../../utls/utls";
 
 const Ticket = ({ ticket }) => {
   return (
@@ -17,6 +17,7 @@ const Ticket = ({ ticket }) => {
         <img
           src={`https://pics.avs.io/99/36/${ticket.carrier}.png`}
           alt="logo"
+          className={styles.img}
         />
       </div>
       <div className={styles.details}>

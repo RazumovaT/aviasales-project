@@ -7,11 +7,15 @@ import {
   fetchId,
   allTickets,
   fetchStatus,
-  fetchStop,
+  // fetchStop,
   addSlice,
   searchId,
   fetchTicketsData,
+  cheapestFlights,
+  fastestFlights,
+  optimalFlights,
 } from "../../store/ticketsSlice.js";
+import { transferArray } from "../../store/transferSlice";
 import Ticket from "../Ticket/Ticket";
 import { useSelector } from "react-redux";
 
@@ -19,11 +23,16 @@ const TicketList = () => {
   const id = useSelector(searchId);
   const tickets = useSelector(allTickets);
   const status = useSelector(fetchStatus);
-  const stop = useSelector(fetchStop);
+  // const stop = useSelector(fetchStop);
   const slice = useSelector(addSlice);
-  const transfers = useSelector((state) => state.transfers.transfers);
+  const transfers = useSelector(transferArray);
+  const cheapest = useSelector(cheapestFlights);
+  const fastest = useSelector(fastestFlights);
+  const optimal = useSelector(optimalFlights);
 
   const dispatch = useDispatch();
+
+  const transfersCheck = transfers.some((el) => el.checked);
 
   useEffect(() => {
     dispatch(fetchId());
@@ -33,7 +42,7 @@ const TicketList = () => {
     if (id) {
       dispatch(fetchTicketsData(id));
     }
-  }, [dispatch, id, stop]);
+  }, [dispatch, id]);
 
   const filterTicketsByTransfers = (arr) => {
     let newArr = [];
@@ -50,15 +59,36 @@ const TicketList = () => {
     return [...newArr].flat();
   };
 
-  const content = filterTicketsByTransfers(tickets)
-    .slice(0, slice)
-    .map((ticket) => {
-      return <Ticket ticket={ticket} key={nanoid()} />;
-    });
+  const copiedArr = JSON.parse(JSON.stringify(tickets));
+
+  const filterTicketsByTabs = (a, b) => {
+    if (cheapest) {
+      return a.price - b.price;
+    } else if (fastest) {
+      return (
+        a.segments[0].duration +
+        a.segments[1].duration -
+        (b.segments[0].duration + b.segments[1].duration)
+      );
+    } else if (optimal) {
+      return (
+        a.price / (a.segments[0].duration + a.segments[1].duration) -
+        b.price / (b.segments[0].duration + b.segments[1].duration)
+      );
+    }
+  };
+
+  const finalTicketsArray = [
+    ...new Set(filterTicketsByTransfers(copiedArr).sort(filterTicketsByTabs)),
+  ];
+
+  const content = finalTicketsArray.slice(0, slice).map((ticket) => {
+    return <Ticket ticket={ticket} key={nanoid()} />;
+  });
 
   return (
     <>
-      {status === "loading" && (
+      {status === "loading" && transfersCheck && (
         <div className={styles.loader}>
           <DotLoader size={16} color="#2196f3" between={10} />
         </div>

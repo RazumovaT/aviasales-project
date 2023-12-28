@@ -2,11 +2,7 @@ import React from "react";
 import { Radio } from "antd";
 import styles from "./Tabs.module.scss";
 import { useDispatch } from "react-redux";
-import {
-  filterCheapestFlight,
-  filterFastestFlight,
-  filterOptimalFlight,
-} from "../../store/ticketsSlice";
+import { setActiveTab } from "../../store/ticketsSlice";
 
 const Tabs = () => {
   const dispatch = useDispatch();
@@ -18,21 +14,21 @@ const Tabs = () => {
     >
       <Radio.Button
         className={styles.button}
-        onClick={() => dispatch(filterCheapestFlight())}
+        onClick={(e) => dispatch(setActiveTab(e.target.value))}
         value="cheap"
       >
         Самый дешевый
       </Radio.Button>
       <Radio.Button
         className={styles.button}
-        onClick={() => dispatch(filterFastestFlight())}
+        onClick={(e) => dispatch(setActiveTab(e.target.value))}
         value="fast"
       >
         Самый быстрый
       </Radio.Button>
       <Radio.Button
-        onClick={() => dispatch(filterOptimalFlight())}
         className={styles.button}
+        onClick={(e) => dispatch(setActiveTab(e.target.value))}
         value="optimal"
       >
         Оптимальный
